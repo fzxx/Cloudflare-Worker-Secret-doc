@@ -1,6 +1,6 @@
 // 分享链接路径
 const SharePath = '/s/';
-// 分享ID长度，建议10-200位内
+// 分享ID长度，建议10 - 200位内
 const ID_Length = 24;
 
 addEventListener('fetch', event => {
@@ -121,28 +121,36 @@ function renderHTML() {
       <p>© 秘密文档 - 极简、<a href="https://github.com/fzxx/Cloudflare-Worker-Secret-doc" target="_blank" rel="noopener noreferrer">开源</a>的在线文档。</p>
     </footer>
     <script>
-        document.getElementById('submit-button').addEventListener('click', function() {
+        document.getElementById('submit-button').addEventListener('click', async function() {
             var content = document.querySelector('textarea').value;
-            fetch('/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text_doc: content }),
-            })
-            .then(response => response.json())
-            .then(data => {
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text_doc: content }),
+                });
+                const data = await response.json();
                 if (data.link) {
                     var linkDiv = document.getElementById('link');
                     linkDiv.innerHTML = '<strong>链接已生成</strong>  <a href="' + data.link + '" target="_blank">' + data.link + '</a>';
+
+                    // 复制链接到剪贴板
+                    try {
+                        await navigator.clipboard.writeText(data.link);
+                        alert('链接已复制到剪贴板！');
+                    } catch (err) {
+                        console.error('复制失败:', err);
+                        alert('复制链接失败，请手动复制。');
+                    }
                 } else {
                     alert('创建链接出错');
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Error:', error);
                 alert('创建链接出错');
-            });
+            }
         });
     </script>
 </body>
