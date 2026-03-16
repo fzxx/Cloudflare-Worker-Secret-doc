@@ -1,6 +1,6 @@
-# Cloudflare Worker 秘密文档
+# Cloudflare Worker Secret doc
 
-一个极简、安全的 Cloudflare Worker 秘密文档分享服务，支持阅后即焚功能。
+极简、[开源](https://github.com/fzxx/Cloudflare-Worker-Secret-doc)端到端加密的阅后即焚文档。
 
 ## 功能特点
 
